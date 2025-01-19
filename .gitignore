@@ -5,9 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
-
 # Virtual environments
 .venv
-
 # uv lock file
 uv.lock
