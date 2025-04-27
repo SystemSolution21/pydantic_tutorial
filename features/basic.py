@@ -27,23 +27,28 @@ from decimal import Decimal
 
 # 1. Basic Model Definition with New Features
 class UserRole(str, Enum):
+    """User roles in the system"""
+
     ADMIN = "admin"
     USER = "user"
     GUEST = "guest"
 
 
 class User(BaseModel):
+    """User model with various validation and configuration features"""
+
     id: Annotated[int, Field(gt=0, description="User ID must be positive")]
     username: Annotated[str, StringConstraints(min_length=3, max_length=50)]
     email: EmailStr
     password: SecretStr
+    password_confirm: SecretStr
     role: UserRole = UserRole.USER
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.now)
     tags: List[str] = Field(default_factory=list)
     profile_url: Optional[AnyUrl] = None
 
-    # New style config using ConfigDict
+    # model configuration using ConfigDict
     model_config = ConfigDict(
         strict=True,
         frozen=False,
@@ -57,13 +62,13 @@ class User(BaseModel):
         },
     )
 
-    # New computed_field decorator
+    # computed_field decorator
     @computed_field
     @property
     def is_admin(self) -> bool:
         return self.role == "admin"
 
-    # New field validator (replaces old validator decorator)
+    # model validator for username being alphanumeric
     @field_validator("username")
     @classmethod
     def username_alphanumeric(cls, value: str) -> str:
@@ -71,7 +76,7 @@ class User(BaseModel):
             raise ValueError("Username must be alphanumeric")
         return value
 
-    # New model validator (replaces old root_validator)
+    # model validator for password containing username
     @model_validator(mode="after")
     def check_password_username(self) -> "User":
         if (
@@ -79,6 +84,13 @@ class User(BaseModel):
             and self.username in self.password.get_secret_value()
         ):
             raise ValueError("Password cannot contain username")
+        return self
+
+    # model validator for password confirmation
+    @model_validator(mode="after")
+    def check_password_confirm(self) -> "User":
+        if self.password.get_secret_value() != self.password_confirm.get_secret_value():
+            raise ValueError("Password confirmation does not match")
         return self
 
 
@@ -154,7 +166,9 @@ class Address(BaseModel):
 class Customer(BaseModel):
     user: User
     addresses: List[Address]
-    primary_address: Optional[int] = Field(None, description="Index of primary address")
+    primary_address: Optional[int] = Field(
+        default=None, description="Index of primary address"
+    )
 
     @model_validator(mode="after")
     def validate_primary_address(self) -> "Customer":
@@ -235,6 +249,7 @@ def main() -> None:
             username="john_doe",
             email="john@example.com",
             password=SecretStr(secret_value="password1"),
+            password_confirm=SecretStr(secret_value="password1"),
             role=UserRole.ADMIN,
         )
 
@@ -250,18 +265,20 @@ def main() -> None:
                 "username": "user1",
                 "email": "user1@example.com",
                 "password": "pass1",
+                "password_confirm": "pass1",
             },
             {
                 "id": 2,
                 "username": "user2",
                 "email": "user2@example.com",
                 "password": "pass2",
+                "password_confirm": "pass2",
             },
         ]
-        users = UserList.model_validate(users_data)
+        users: UserList = UserList.model_validate(obj=users_data)
 
         # Use type adapter
-        validated_users = user_list_adapter.validate_python(users_data)
+        validated_users: List[User] = user_list_adapter.validate_python(users_data)
 
         print("Validation successful")
 

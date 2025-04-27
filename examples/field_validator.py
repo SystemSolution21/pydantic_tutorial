@@ -22,16 +22,32 @@ class Order(BaseModel):
             raise ValueError("Delivery date must be in the future")
         return value
 
+    def __str__(self) -> str:
+        return (
+            f"Order(id={self.id}, item_name={self.item_name}, quantity={self.quantity}, "
+            f"order_date={self.order_date.__format__('%Y-%m-%d %H:%M:%S')}, delivery_date={self.delivery_date.date()})"
+        )
 
+
+# Usage
 def main() -> None:
     try:
+        # order = Order(
+        #     id=1,
+        #     item_name="Laptop",
+        #     quantity=1,
+        #     order_date=dt.now(),
+        #     delivery_date=dt.now() + td(days=3),
+        # )
+
+        # Field validator error
         order = Order(
             id=1,
             item_name="Laptop",
             quantity=0,
             order_date=dt.now(),
-            delivery_date=dt.now(),
-        )  # + td(days=7))
+            delivery_date=dt.now() - td(days=3),
+        )
 
         print(order)
     except ValueError as e:
