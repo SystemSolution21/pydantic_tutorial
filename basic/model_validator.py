@@ -1,3 +1,5 @@
+"""Model validators."""
+
 from typing import Any
 from typing_extensions import Self
 from pydantic import BaseModel, model_validator, SecretStr

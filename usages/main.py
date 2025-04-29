@@ -1,3 +1,5 @@
+"""This module demonstrates various usages of Pydantic."""
+
 from datetime import datetime, date
 from enum import Enum
 from typing import List, Dict, Optional, Union, Literal, TypeVar, Generic, Any

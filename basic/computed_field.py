@@ -1,3 +1,5 @@
+"""computed field"""
+
 from pydantic import BaseModel, computed_field
 from pprint import pprint
 
