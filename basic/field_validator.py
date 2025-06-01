@@ -1,8 +1,9 @@
 """field validator"""
 
-from pydantic import BaseModel, field_validator
 from datetime import datetime as dt
 from datetime import timedelta as td
+
+from pydantic import BaseModel, field_validator
 
 
 class Order(BaseModel):
@@ -31,16 +32,17 @@ class Order(BaseModel):
         )
 
 
-# Usage
+# Entrypoint
 def main() -> None:
     try:
-        # order = Order(
-        #     id=1,
-        #     item_name="Laptop",
-        #     quantity=1,
-        #     order_date=dt.now(),
-        #     delivery_date=dt.now() + td(days=3),
-        # )
+        order = Order(
+            id=1,
+            item_name="Laptop",
+            quantity=1,
+            order_date=dt.now(),
+            delivery_date=dt.now() + td(days=3),
+        )
+        print(f"\n{order}")
 
         # Field validator error
         order = Order(
@@ -50,10 +52,10 @@ def main() -> None:
             order_date=dt.now(),
             delivery_date=dt.now() - td(days=3),
         )
+        print(f"\n{order}")
 
-        print(order)
     except ValueError as e:
-        print(e)
+        print(f"\n{e}")
 
 
 if __name__ == "__main__":
