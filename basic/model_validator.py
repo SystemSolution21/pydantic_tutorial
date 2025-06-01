@@ -42,9 +42,9 @@ def main() -> None:
             password=SecretStr(secret_value="password1"),
             password_confirm=SecretStr(secret_value="password1"),
         )
-        print(f"Valid user created: {user1}")
+        print(f"\nValid user created: {user1}")
     except ValueError as e:
-        print(f"Error creating user: {e}")
+        print(f"\nError creating user: {e}")
 
     # Invalid user with card_number
     try:
@@ -57,9 +57,9 @@ def main() -> None:
             "card_number": "1234-5678-9012-3456",
         }
         user_with_card = User(**user2)
-        print(f"User with card created: {user_with_card}")
+        print(f"\nUser with card created: {user_with_card}")
     except ValueError as e:
-        print(f"Error creating user with card: {e}")
+        print(f"\nError creating user with card: {e}")
 
 
 if __name__ == "__main__":

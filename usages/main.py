@@ -1,8 +1,15 @@
 """This module demonstrates various usages of Pydantic."""
 
+import json
+
 from datetime import datetime, date
+from decimal import Decimal
 from enum import Enum
+from uuid import UUID
+
 from typing import List, Dict, Optional, Union, Literal, TypeVar, Generic, Any
+from typing_extensions import Annotated
+
 from pydantic import (
     BaseModel,
     Field,
@@ -21,10 +28,6 @@ from pydantic import (
     ValidationInfo,
     ValidatorFunctionWrapHandler,
 )
-from typing_extensions import Annotated
-import json
-from uuid import UUID
-from decimal import Decimal
 
 
 # 1. Basic Model Definition with New Features
