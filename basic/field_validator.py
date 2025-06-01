@@ -34,6 +34,7 @@ class Order(BaseModel):
 
 # Entrypoint
 def main() -> None:
+    # Field validator success
     try:
         order = Order(
             id=1,
@@ -42,9 +43,13 @@ def main() -> None:
             order_date=dt.now(),
             delivery_date=dt.now() + td(days=3),
         )
-        print(f"\n{order}")
+        print(f"\nField validator success: \n{order}")
 
-        # Field validator error
+    except ValueError as e:
+        print(f"\nField validator error: \n{e}")
+
+    # Field validator error
+    try:
         order = Order(
             id=1,
             item_name="Laptop",
@@ -52,10 +57,10 @@ def main() -> None:
             order_date=dt.now(),
             delivery_date=dt.now() - td(days=3),
         )
-        print(f"\n{order}")
+        print(f"\nField validator success: \n{order}")
 
     except ValueError as e:
-        print(f"\n{e}")
+        print(f"\nField validator error: \n{e}")
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@
 
 from typing import Any
 from typing_extensions import Self
+
 from pydantic import BaseModel, model_validator, SecretStr
 
 
@@ -31,7 +32,7 @@ class User(BaseModel):
         return data
 
 
-# Usage
+# Entrypoint
 def main() -> None:
     # Valid user - no card_number
     try:
